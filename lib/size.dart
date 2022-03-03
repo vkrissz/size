@@ -20,7 +20,7 @@ class Sizes {
     } else if (Platform.isMacOS) {
       _libraryPath = 'libsize.dylib'; //path.join('lib', 'shared', 'libsize.dylib');
     } else if(Platform.isLinux) {
-      _libraryPath = 'libsize.so';
+      _libraryPath = Platform.script.resolve('../lib/libsize.so').toFilePath(windows: false);
     } else {
       throw SizesException("Current platform is not supported.");
     }
