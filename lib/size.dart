@@ -15,12 +15,14 @@ class Sizes {
   late final DynamicLibrary _dylib;
   late final String _libraryPath;
   Sizes() {
-    _libraryPath = 'libsize.so';
     if (Platform.isWindows) {
-      _libraryPath = 'size.dll'; //path.join('lib', 'shared', 'size.dll');
+      _libraryPath = Platform.script.resolve('../lib/size.dll').toFilePath(windows: true);
     } else if (Platform.isMacOS) {
-      _libraryPath =
-          'libsize.dylib'; //path.join('lib', 'shared', 'libsize.dylib');
+      _libraryPath = 'libsize.dylib'; //path.join('lib', 'shared', 'libsize.dylib');
+    } else if(Platform.isLinux) {
+      _libraryPath = 'libsize.so';
+    } else {
+      throw SizesException("Current platform is not supported.");
     }
     _dylib = DynamicLibrary.open(_libraryPath);
   }
@@ -86,4 +88,9 @@ extension Empty on Directory {
   Future<bool> is_empty() async {
     return Sizes()._empty(this.path.toString());
   }
+}
+
+class SizesException implements Exception {
+  final String message;
+  SizesException(this.message);
 }
